@@ -11,21 +11,47 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     strategy:
-      max-parallel: 4
+      fail-fast: false
       matrix:
-        python-version: [3.9, 3.10.0, 3.11]
+        python-version: [3.9, 3.10, 3.11]
 
     steps:
-      - uses: actions/checkout@v3
+      # Step 1: Checkout repository
+      - uses: actions/checkout@v4
+
+      # Step 2: Set up Python
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Dependencies
+
+      # Step 3: Cache dependencies
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
+
+      # Step 4: Install dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: Run Tests
+          pip install --no-cache-dir -r requirements.txt
+          pip install flake8  # For linting
+
+      # Step 5: Run lint checks
+      - name: Run lint checks
         run: |
+          echo "Running flake8 lint checks..."
+          flake8 --max-line-length=120 --exclude=migrations,venv .
+
+      # Step 6: Run Django tests
+      - name: Run Django tests
+        run: |
+          echo "Running Django tests..."
           python manage.py test
