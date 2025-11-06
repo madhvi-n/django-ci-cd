@@ -16,18 +16,44 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Post',
+            name="Post",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200)),
-                ('content', models.TextField()),
-                ('uuid', models.UUIDField(default=uuid.uuid4, unique=True)),
-                ('status', models.CharField(choices=[('DRAFT', 'Draft'), ('PUBLIC', 'Public'), ('ARCHIVED', 'Archived')], default='PUBLIC', max_length=10)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='posts', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=200)),
+                ("content", models.TextField()),
+                ("uuid", models.UUIDField(default=uuid.uuid4, unique=True)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("DRAFT", "Draft"),
+                            ("PUBLIC", "Public"),
+                            ("ARCHIVED", "Archived"),
+                        ],
+                        default="PUBLIC",
+                        max_length=10,
+                    ),
+                ),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="posts",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Post',
-                'verbose_name_plural': 'Posts',
+                "verbose_name": "Post",
+                "verbose_name_plural": "Posts",
             },
         ),
     ]
