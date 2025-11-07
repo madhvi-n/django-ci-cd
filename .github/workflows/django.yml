@@ -57,11 +57,10 @@ jobs:
       # Step 6: Run tests with pytest and coverage
       - name: Run tests with coverage
         run: |
-          pytest --ds=app.test_project.settings \
-                 --cov=. \
-                 --cov-report=term-missing \
-                 --cov-report=xml \
-                 --alluredir=allure-results
+          pytest --cov=app \
+                --cov-report=term-missing \
+                --cov-report=xml \
+                --alluredir=allure-results
 
       # Upload Allure results (optional)
       - name: Upload Allure results
