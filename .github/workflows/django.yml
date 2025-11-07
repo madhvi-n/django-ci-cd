@@ -44,6 +44,9 @@ jobs:
           pip install --no-cache-dir -r requirements.txt
           pip install -r requirements-dev.txt
 
+      - name: Apply migrations
+        run: python manage.py migrate --noinput
+
       # Step 5: Run lint and format checks
       - name: Run lint and format checks
         run: |
