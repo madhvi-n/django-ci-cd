@@ -57,7 +57,7 @@ jobs:
       # Step 6: Run tests with pytest and coverage
       - name: Run tests with coverage
         run: |
-          pytest --ds=your_project_name.settings \
+          pytest --ds=app.test_project.settings \
                  --cov=. \
                  --cov-report=term-missing \
                  --cov-report=xml \
