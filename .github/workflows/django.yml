@@ -44,14 +44,28 @@ jobs:
           pip install --no-cache-dir -r requirements.txt
           pip install flake8  # For linting
 
-      # Step 5: Run lint checks
-      - name: Run lint checks
+      # Step 5: Run lint and format checks
+      - name: Run lint and format checks
         run: |
-          echo "Running flake8 lint checks..."
+          echo "Running flake8 linting..."
           flake8 --max-line-length=120 --exclude=migrations,venv .
+          echo "Checking code formatting with Black..."
+          black --check .
+          echo "Checking import order with isort..."
+          isort . --check-only
 
-      # Step 6: Run Django tests
-      - name: Run Django tests
+      # Step 6: Run tests with pytest and coverage
+      - name: Run tests with coverage
         run: |
-          echo "Running Django tests..."
-          python manage.py test
+          pytest --ds=your_project_name.settings \
+                 --cov=. \
+                 --cov-report=term-missing \
+                 --cov-report=xml \
+                 --alluredir=allure-results
+
+      # Upload Allure results (optional)
+      - name: Upload Allure results
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
